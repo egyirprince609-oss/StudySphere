@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function ownsUser(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+    function protectedProfileFields() {
+      return ['premium', 'isPremium', 'plan', 'subscriptionStatus', 'premiumUntil', 'role', 'coins', 'xp', 'balance', 'referralCount', 'referralReward', 'entitlements'];
+    }
+
+    match /users/{uid} {
+      allow read: if ownsUser(uid);
+      allow create: if ownsUser(uid)
+        && !request.resource.data.keys().hasAny(protectedProfileFields());
+      allow update: if ownsUser(uid)
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(protectedProfileFields());
+      // Use a trusted account-deletion backend if complete account deletion is required.
+      allow delete: if false;
+
+      match /{collectionName}/{documentId} {
+        allow read, create, update, delete: if ownsUser(uid)
+          && collectionName in ['notes', 'projects', 'conversations'];
+      }
+    }
+
+    match /referralCodes/{code} {
+      // A signed-in user may look up a code, but cannot enumerate all codes.
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
+    }
+  }
+}

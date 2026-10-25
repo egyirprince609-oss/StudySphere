@@ -1,0 +1,19 @@
+{
+  "id": "./index.html",
+  "name": "Study Sphere Ai",
+  "short_name": "Study Sphere",
+  "description": "Curiosity today. Confidence for tomorrow. A friendly learning space for lessons, practice, projects and AI study support.",
+  "lang": "en",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#f8faff",
+  "theme_color": "#2348c6",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "./logo.png", "sizes": "any", "type": "image/png", "purpose": "any" },
+    { "src": "./logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

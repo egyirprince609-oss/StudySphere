@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2348c6"><meta name="application-name" content="Study Sphere Ai">
+  <meta name="description" content="Log in to Study Sphere Ai to continue your learning journey, access your projects and sync your study notes.">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="Study Sphere Ai"><meta property="og:title" content="Log in | Study Sphere Ai"><meta property="og:description" content="Continue learning, creating and building confidence with Study Sphere Ai."><meta property="og:image" content="logo.png"><meta property="og:image:alt" content="Study Sphere Ai logo">
+  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Log in | Study Sphere Ai"><meta name="twitter:description" content="Curiosity today. Confidence for tomorrow."><meta name="twitter:image" content="logo.png">
+  <link rel="icon" href="logo.png" type="image/png"><link rel="manifest" href="manifest.json"><link rel="stylesheet" href="styles.css">
+  <title>Log in | Study Sphere Ai</title>
+</head>
+<body>
+  <main class="page-shell">
+    <div class="auth-layout">
+      <aside class="brand-panel">
+        <div class="brand-top"><a class="brand-lockup" href="index.html" aria-label="Study Sphere Ai home"><img src="logo.png" alt="" width="64" height="64"><span><span class="brand-name">Study Sphere Ai</span><span class="brand-mini">Your learning universe</span></span></a></div>
+        <section class="brand-copy"><span class="eyebrow"><span class="spark">✦</span> Welcome back, learner</span><h1>Your next bright idea is <span style="color:#87e7ff">waiting.</span></h1><p>Pick up where you left off. Your account helps keep your learning profile and saved work connected across your devices.</p><div class="feature-pills"><span>✧ Your learning journey</span><span>⌘ Your projects</span><span>✦ Your ideas</span></div></section>
+        <div class="brand-foot">Curiosity today. Confidence for tomorrow.</div>
+      </aside>
+      <section class="form-panel" aria-labelledby="form-title">
+        <header class="form-heading"><div class="kicker">Welcome back</div><h2 id="form-title">Log in to your space</h2><p>Enter your details to continue learning.</p></header>
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+        <section id="verify-panel" class="verify-panel" aria-live="polite"><h3>One more step ✉️</h3><p>Your account email is not verified yet. Check your inbox and select the verification link, or request a new one below.</p><button class="secondary-btn" id="resend-verification" type="button">Resend verification email</button></section>
+        <form id="login-form" novalidate>
+          <div class="field"><label for="email">Email address</label><div class="input-wrap"><input id="email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required></div></div>
+          <div class="field"><label for="password">Password</label><div class="input-wrap has-toggle"><input id="password" name="password" type="password" autocomplete="current-password" maxlength="400" placeholder="Your password" required><button class="password-toggle" id="toggle-password" type="button">Show</button></div></div>
+          <div class="small-links"><span>Keep your account secure.</span><a href="forgot-password.html" id="forgot-link">Forgot password?</a></div>
+          <button class="primary-btn" id="login-button" type="submit">Log in <span aria-hidden="true">→</span></button>
+        </form>
+        <div class="divider-text">OR CONTINUE WITH</div>
+        <button class="google-btn" id="google-login" type="button"><span class="google-g" aria-hidden="true">G</span> Continue with Google</button>
+        <p class="form-bottom">New to Study Sphere Ai? <a id="signup-link" href="signup.html">Create an account</a></p>
+        <p class="tiny-note">Use only your own account. Your notes and projects should remain private to you.</p>
+      </section>
+    </div>
+  </main>
+  <script type="module">
+    import { auth, signInWithEmail, signInWithGoogle, watchAuthState, refreshCurrentUser, resendVerificationEmail, ensureUserProfile, captureReferralCode, processGoogleRedirectResult } from "./authentication.js";
+    const $ = id => document.getElementById(id), form = $("login-form"), message = $("message");
+    const showMessage = (text, type = "info") => { message.textContent = text; message.className = `message show ${type}`; };
+    const friendlyError = error => ({
+      "auth/invalid-credential": "That email and password combination was not recognised. Check them and try again.",
+      "auth/user-not-found": "No account was found for that email. Create an account if you are new here.",
+      "auth/wrong-password": "That password was not recognised. Try again or reset it.",
+      "auth/invalid-email": "Please enter a valid email address.",
+      "auth/too-many-requests": "There have been too many attempts. Wait a little and try again.",
+      "auth/network-request-failed": "Network issue. Check your internet connection and try again.",
+      "auth/popup-closed-by-user": "The Google sign-in window was closed before finishing.",
+      "auth/popup-blocked": "Your browser blocked the sign-in popup. Allow popups or try again on mobile.",
+      "auth/unauthorized-domain": "This website domain is not authorized in Firebase Authentication settings."
+    }[error?.code] || "We couldn't log you in. Please try again or check your Firebase configuration.");
+    const referral = captureReferralCode();
+    if (referral) $("signup-link").href = `signup.html?ref=${encodeURIComponent(referral)}`;
+    if (new URLSearchParams(location.search).get("verified") === "1") showMessage("Thanks for verifying your email. Checking your account now…", "success");
+    if (new URLSearchParams(location.search).get("reset") === "1") showMessage("If you completed the password reset, log in using your new password.", "success");
+    $("toggle-password").addEventListener("click", () => { const input = $("password"); input.type = input.type === "password" ? "text" : "password"; $("toggle-password").textContent = input.type === "password" ? "Show" : "Hide"; });
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault(); message.className = "message";
+      const email = $("email").value.trim(), password = $("password").value;
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showMessage("Please enter a valid email address.", "error"); $("email").focus(); return; }
+      if (!password) { showMessage("Please enter your password.", "error"); $("password").focus(); return; }
+      const button = $("login-button"); button.disabled = true; button.textContent = "Signing you in…";
+      try {
+        const user = await signInWithEmail(email, password);
+        await refreshCurrentUser();
+        const current = auth.currentUser || user;
+        const passwordProvider = (current.providerData || []).some(p => p.providerId === "password");
+        if (passwordProvider && !current.emailVerified) {
+          $("verify-panel").classList.add("show");
+          showMessage("You are signed in, but you must verify your email before continuing to onboarding.", "info");
+          return;
+        }
+        try { await ensureUserProfile(current); } catch (error) { console.warn("Cloud profile sync:", error); }
+        window.location.replace("onboarding.html");
+      } catch (error) { console.error(error); showMessage(friendlyError(error), "error"); }
+      finally { button.disabled = false; button.innerHTML = 'Log in <span aria-hidden="true">→</span>'; }
+    });
+
+    $("google-login").addEventListener("click", async () => {
+      const button = $("google-login"); button.disabled = true; button.textContent = "Connecting to Google…";
+      try { await signInWithGoogle(); }
+      catch (error) { console.error(error); showMessage(friendlyError(error), "error"); button.disabled = false; button.innerHTML = '<span class="google-g" aria-hidden="true">G</span> Continue with Google'; }
+    });
+    $("resend-verification").addEventListener("click", async () => {
+      const button = $("resend-verification"); button.disabled = true; button.textContent = "Sending…";
+      try { await resendVerificationEmail(); showMessage("A fresh verification email has been requested. Check your inbox and Spam/Junk folder.", "success"); }
+      catch (error) { console.error(error); showMessage(friendlyError(error), "error"); }
+      finally { button.disabled = false; button.textContent = "Resend verification email"; }
+    });
+
+    try { await processGoogleRedirectResult(); } catch (error) { console.warn(error); }
+    watchAuthState(async user => {
+      if (!user) return;
+      try { await refreshCurrentUser(); } catch { /* current session may still be usable */ }
+      const current = auth.currentUser || user;
+      const passwordProvider = (current.providerData || []).some(p => p.providerId === "password");
+      if (passwordProvider && !current.emailVerified) {
+        $("verify-panel").classList.add("show");
+        return;
+      }
+      try { await ensureUserProfile(current); } catch (error) { console.warn("Cloud profile sync:", error); }
+      window.location.replace("onboarding.html");
+    });
+    if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+  </script>
+</body>
+</html>
