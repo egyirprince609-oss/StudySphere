@@ -1,37 +1,35 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() {
-      return request.auth != null;
-    }
-    function ownsUser(uid) {
-      return signedIn() && request.auth.uid == uid;
-    }
-    function protectedProfileFields() {
-      return ['premium', 'isPremium', 'plan', 'subscriptionStatus', 'premiumUntil', 'role', 'coins', 'xp', 'balance', 'referralCount', 'referralReward', 'entitlements'];
-    }
-
+    // Each learner may read their own profile. Client-side writes cannot grant premium access.
     match /users/{uid} {
-      allow read: if ownsUser(uid);
-      allow create: if ownsUser(uid)
-        && !request.resource.data.keys().hasAny(protectedProfileFields());
-      allow update: if ownsUser(uid)
-        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(protectedProfileFields());
-      // Use a trusted account-deletion backend if complete account deletion is required.
+      allow read: if request.auth != null && request.auth.uid == uid;
+
+      allow create: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.uid == uid
+        && request.resource.data.plan == 'free'
+        && request.resource.data.premium == false
+        && request.resource.data.subscriptionStatus == 'free'
+        && request.resource.data.keys().hasAll([
+          'uid', 'displayName', 'email', 'photoURL', 'emailVerified',
+          'plan', 'premium', 'subscriptionStatus', 'preferences', 'createdAt', 'updatedAt'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'uid', 'displayName', 'email', 'photoURL', 'emailVerified',
+          'plan', 'premium', 'subscriptionStatus', 'preferences', 'createdAt', 'updatedAt'
+        ]);
+
+      allow update: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'displayName', 'email', 'photoURL', 'emailVerified', 'updatedAt'
+        ]);
+
       allow delete: if false;
-
-      match /{collectionName}/{documentId} {
-        allow read, create, update, delete: if ownsUser(uid)
-          && collectionName in ['notes', 'projects', 'conversations'];
-      }
     }
 
-    match /referralCodes/{code} {
-      // A signed-in user may look up a code, but cannot enumerate all codes.
-      allow get: if signedIn();
-      allow list: if false;
-      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
-      allow update, delete: if false;
-    }
+    // No other collections are accessible until explicit, narrowly scoped rules are added.
   }
 }

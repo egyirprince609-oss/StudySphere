@@ -1,164 +1,146 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#2348c6"><meta name="application-name" content="Study Sphere Ai">
-  <meta name="description" content="Create your Study Sphere Ai account to save your learning journey, projects and study notes across devices.">
-  <meta property="og:type" content="website"><meta property="og:site_name" content="Study Sphere Ai"><meta property="og:title" content="Create your Study Sphere Ai account"><meta property="og:description" content="Start a friendly learning journey with Study Sphere Ai."><meta property="og:image" content="logo.png"><meta property="og:image:alt" content="Study Sphere Ai logo">
-  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Create your Study Sphere Ai account"><meta name="twitter:description" content="Curiosity today. Confidence for tomorrow."><meta name="twitter:image" content="logo.png">
-  <link rel="icon" href="logo.png" type="image/png"><link rel="manifest" href="manifest.json"><link rel="stylesheet" href="styles.css">
-  <title>Create account | Study Sphere Ai</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#050816">
+  <meta name="description" content="Create your Study Sphere Ai account and start learning with a personal AI tutor.">
+  <title>Create account — Study Sphere Ai</title>
+  <link rel="icon" href="./assets/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <main class="page-shell">
-    <div class="auth-layout">
-      <aside class="brand-panel">
-        <div class="brand-top"><a class="brand-lockup" href="index.html" aria-label="Study Sphere Ai home"><img src="logo.png" alt="" width="64" height="64"><span><span class="brand-name">Study Sphere Ai</span><span class="brand-mini">Your learning universe</span></span></a></div>
-        <section class="brand-copy"><span class="eyebrow"><span class="spark">✦</span> Your next chapter starts here</span><h1>Big ideas begin with <span style="color:#87e7ff">curiosity.</span></h1><p>Create your learning space to explore lessons, build projects, keep notes and discover new ways to learn—one step at a time.</p><div class="feature-pills"><span>✧ Learn at your pace</span><span>⌘ Build projects</span><span>✦ Study smarter</span></div></section>
-        <div class="brand-foot">Curiosity today. Confidence for tomorrow.</div>
-      </aside>
-      <section class="form-panel" aria-labelledby="form-title">
-        <header class="form-heading"><div class="kicker">Start learning</div><h2 id="form-title">Create your account</h2><p>Just a few details and your learning space is ready to grow with you.</p></header>
-        <div id="message" class="message" role="status" aria-live="polite"></div>
-        <section id="verify-panel" class="verify-panel" aria-live="polite">
-          <h3>Check your inbox ✉️</h3>
-          <p>We sent a verification link to <strong id="verify-email">your email address</strong>. Open the email and select its verification link. When verification is complete, return here or sign in again.</p>
-          <button class="secondary-btn" id="resend-verification" type="button">Resend verification email</button>
-          <p class="helper" style="margin-top:10px">Didn't see it? Check Spam/Junk. The verification link is handled by Firebase; it is not stored in your browser.</p>
-        </section>
-        <form id="signup-form" novalidate>
-          <div class="field"><label for="display-name">Your name</label><div class="input-wrap"><input id="display-name" name="displayName" type="text" autocomplete="name" maxlength="80" placeholder="e.g. Ama Mensah" required></div></div>
-          <div class="field"><label for="email">Email address</label><div class="input-wrap"><input id="email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required></div></div>
-          <div class="field"><label for="password">Create a password</label><div class="input-wrap has-toggle"><input id="password" name="password" type="password" autocomplete="new-password" minlength="6" maxlength="400" placeholder="Create a strong password" required><button class="password-toggle" type="button" data-toggle="password" aria-label="Show password">Show</button></div>
-            <div class="strength-track" role="progressbar" aria-label="Password strength" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><div id="strength-fill" class="strength-fill"></div></div>
-            <div class="strength-label"><span id="strength-label">Password strength</span><span id="strength-count">0/4 requirements</span></div>
-            <div class="requirements" aria-live="polite">
-              <span class="requirement" id="req-length">6–400 characters</span><span class="requirement" id="req-upper">One uppercase letter</span><span class="requirement" id="req-lower">One lowercase letter</span><span class="requirement" id="req-special">One special character</span>
-            </div>
-          </div>
-          <div class="field"><label for="confirm-password">Confirm password</label><div class="input-wrap has-toggle"><input id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" maxlength="400" placeholder="Enter the password again" required><button class="password-toggle" type="button" data-toggle="confirm-password" aria-label="Show confirmation password">Show</button></div><div class="helper" id="match-help">Enter the same password again.</div></div>
-          <button class="primary-btn" id="create-account" type="submit">Create my account <span aria-hidden="true">→</span></button>
-        </form>
-        <div class="divider-text">OR CONTINUE WITH</div>
-        <button class="google-btn" id="google-signup" type="button"><span class="google-g" aria-hidden="true">G</span> Sign up with Google</button>
-        <p class="consent">By creating an account, you agree to use Study Sphere Ai responsibly. The published Terms and Privacy Policy pages should be available before public launch.</p>
-        <p class="form-bottom">Already have an account? <a id="login-link" href="login.html">Log in</a></p>
-      </section>
-    </div>
+  <div class="bg-grid"></div><div class="ambient a"></div><div class="ambient b"></div>
+  <header class="topbar wrap">
+    <a class="brand" href="./index.html" aria-label="Study Sphere Ai home"><img class="brand-mark" src="./assets/logo.png" alt=""><span><span class="brand-word">Study Sphere <span class="ai">Ai</span></span><span class="brand-note">A Code Academy Solution product</span></span></a>
+    <div class="topbar-side"><span class="helper">Already learning with us?</span><a href="./login.html">Sign in <span aria-hidden="true">↗</span></a></div>
+  </header>
+  <main class="wrap auth-layout">
+    <section class="intro" aria-labelledby="intro-title">
+      <span class="eyebrow"><span class="spark">✦</span> YOUR NEXT BREAKTHROUGH STARTS HERE</span>
+      <h1 id="intro-title">Turn curiosity into <span class="gradient-text">understanding.</span></h1>
+      <p class="intro-copy">Create your learning space and get a personal AI tutor to help you understand difficult topics, explore new ideas, and grow at your own pace.</p>
+      <div class="feature-stack">
+        <div class="feature"><span class="feature-icon" aria-hidden="true">✧</span><div><strong>Learn in your own way</strong><small>Clear explanations, examples, and step-by-step guidance.</small></div></div>
+        <div class="feature"><span class="feature-icon" aria-hidden="true">⌘</span><div><strong>Keep your learning together</strong><small>Build a personal space for lessons, notes, and future courses.</small></div></div>
+        <div class="feature"><span class="feature-icon" aria-hidden="true">◈</span><div><strong>Start free</strong><small>Begin with the core experience. Premium tools can come later.</small></div></div>
+      </div>
+      <div class="art-panel"><div class="art-inner"><img class="art-logo" src="./assets/logo.png" alt="Study Sphere Ai 3D brain-and-book emblem"><div class="art-copy"><span class="tiny-label">Curiosity today</span><strong>Confidence for tomorrow.</strong><span>One question at a time. One idea understood at a time.</span></div></div></div>
+    </section>
+    <section class="auth-card" aria-labelledby="form-title">
+      <div class="card-brand"><a class="brand" href="./index.html"><img class="brand-mark" src="./assets/logo.png" alt=""><span class="brand-word">Study Sphere <span class="ai">Ai</span></span></a></div>
+      <div class="card-kicker">YOUR LEARNING JOURNEY</div>
+      <h2 class="card-title" id="form-title">Create your account</h2>
+      <p class="card-subtitle">Join your personal AI-powered learning space in just a moment.</p>
+      <div id="notice" class="inline-notice" aria-live="polite"></div>
+      <form class="form" id="signupForm" novalidate>
+        <div class="field"><label for="fullName">Full name</label><div class="input-wrap"><span class="input-icon" aria-hidden="true">♙</span><input id="fullName" name="name" type="text" autocomplete="name" placeholder="How should we call you?" minlength="2" maxlength="80" required></div></div>
+        <div class="field"><label for="email">Email address</label><div class="input-wrap"><span class="input-icon" aria-hidden="true">✉</span><input id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" maxlength="254" required></div></div>
+        <div class="field">
+          <div class="label-row"><label for="password">Create password</label><span style="font-size:.72rem;color:var(--faint)">Secure your account</span></div>
+          <div class="input-wrap"><span class="input-icon" aria-hidden="true">⌑</span><input id="password" name="password" type="password" autocomplete="new-password" placeholder="Create a strong password" minlength="6" maxlength="400" required aria-describedby="passwordHelp"><button class="password-toggle" type="button" data-toggle-password="password" aria-label="Show password" aria-pressed="false">Show</button></div>
+          <p class="field-help" id="passwordHelp">Use at least 6 characters, including uppercase, lowercase, and a special character.</p>
+          <div class="strength" aria-hidden="true"><span id="strengthFill"></span></div>
+          <div class="password-rules" id="passwordRules" aria-live="polite"></div>
+        </div>
+        <div class="field"><label for="confirmPassword">Confirm password</label><div class="input-wrap"><span class="input-icon" aria-hidden="true">⌑</span><input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Enter your password again" minlength="6" maxlength="400" required><button class="password-toggle" type="button" data-toggle-password="confirmPassword" aria-label="Show password" aria-pressed="false">Show</button></div><p id="matchHelp" class="field-help" aria-live="polite">Your confirmation must match your password.</p></div>
+        <button class="btn btn-primary" id="createAccountBtn" type="submit">Create free account <span aria-hidden="true">→</span></button>
+      </form>
+      <div class="divider-label">or continue with</div>
+      <button class="btn google-btn" id="googleBtn" type="button"><span class="google-g" aria-hidden="true">G</span> Continue with Google</button>
+      <div class="auth-foot">Already have an account? <a href="./login.html"><strong>Sign in</strong></a><br><span style="color:var(--faint);font-size:.74rem">A calmer, smarter way to learn — built by Code Academy Solution.</span></div>
+      <p class="legal-copy">Please use an email address you can access. We will send a verification link before letting an email/password account enter the learning space.</p>
+    </section>
   </main>
+  <footer class="footer wrap">© <span id="year"></span> Study Sphere Ai · A Code Academy Solution product</footer>
   <script type="module">
-    import { auth, registerWithEmail, signInWithGoogle, watchAuthState, resendVerificationEmail, refreshCurrentUser, ensureUserProfile, captureReferralCode, processGoogleRedirectResult } from "./authentication.js";
-    const $ = id => document.getElementById(id);
-    const form = $("signup-form"), message = $("message"), createButton = $("create-account");
-    const password = $("password"), confirmation = $("confirm-password");
-    const showMessage = (text, type = "info") => { message.textContent = text; message.className = `message show ${type}`; };
-    const clearMessage = () => { message.textContent = ""; message.className = "message"; };
-    const friendlyError = error => ({
-      "auth/email-already-in-use": "An account already uses this email. Try logging in instead.",
-      "auth/invalid-email": "Please enter a valid email address.",
-      "auth/weak-password": "Your password did not meet the Firebase password policy. Check all four requirements.",
-      "auth/operation-not-allowed": "Email/password sign-up is not enabled in Firebase Authentication yet.",
-      "auth/network-request-failed": "Network issue. Check your connection and try again.",
-      "auth/popup-closed-by-user": "The Google sign-in window was closed before finishing.",
-      "auth/popup-blocked": "Your browser blocked the sign-in popup. Allow popups or try again on mobile.",
-      "auth/unauthorized-domain": "This website domain is not authorized in Firebase Authentication settings."
-    }[error?.code] || "We couldn't finish that request. Please try again. If it continues, check your Firebase setup.");
+    import { auth, createEmailAccount, sendVerification, googleSignIn, ensureUserProfile, friendlyAuthError, isPasswordValid, passwordRules } from './auth-service.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js';
+    import { $, showNotice, clearNotice, setButtonBusy, wirePasswordToggles, renderPasswordRules, strengthPercent } from './auth-ui.js';
 
-    // Keep the referral parameter when moving from sign-up to login.
-    captureReferralCode();
-    const referral = new URLSearchParams(location.search).get("ref");
-    if (referral) $("login-link").href = `login.html?ref=${encodeURIComponent(referral)}`;
+    const form = $('signupForm'), notice = $('notice'), password = $('password'), confirm = $('confirmPassword');
+    const createBtn = $('createAccountBtn'), googleBtn = $('googleBtn');
+    let actionStarted = false, busy = false;
+    $('year').textContent = new Date().getFullYear();
+    wirePasswordToggles();
 
-    function passwordChecks(value) {
-      return {
-        length: value.length >= 6 && value.length <= 400,
-        upper: /[A-Z]/.test(value),
-        lower: /[a-z]/.test(value),
-        special: /[^A-Za-z0-9\s]/.test(value)
-      };
+    function updatePasswordUI() {
+      const rules = passwordRules(password.value);
+      renderPasswordRules($('passwordRules'), rules);
+      $('strengthFill').style.width = `${strengthPercent(rules)}%`;
+      const mismatch = confirm.value.length > 0 && confirm.value !== password.value;
+      $('matchHelp').textContent = mismatch ? 'These passwords do not match yet.' : 'Your confirmation must match your password.';
+      $('matchHelp').style.color = mismatch ? 'var(--danger)' : 'var(--faint)';
+      confirm.setAttribute('aria-invalid', mismatch ? 'true' : 'false');
     }
-    function updatePasswordMeter() {
-      const checks = passwordChecks(password.value);
-      const count = Object.values(checks).filter(Boolean).length;
-      const map = { length: "req-length", upper: "req-upper", lower: "req-lower", special: "req-special" };
-      Object.entries(map).forEach(([key, id]) => $(id).classList.toggle("ok", checks[key]));
-      const percent = count / 4 * 100;
-      $("strength-fill").style.width = `${percent}%`;
-      $("strength-fill").style.background = count <= 1 ? "#e66b76" : count === 2 ? "#f0a336" : count === 3 ? "#4a8ee8" : "#22a879";
-      $("strength-label").textContent = ["Very weak", "Weak", "Fair", "Good", "Strong password"][count];
-      $("strength-count").textContent = `${count}/4 requirements`;
-      $("strength-fill").parentElement.setAttribute("aria-valuenow", String(count));
-      if (!confirmation.value) $("match-help").textContent = "Enter the same password again.";
-      else $("match-help").textContent = confirmation.value === password.value ? "Passwords match ✓" : "The passwords do not match yet.";
-      $("match-help").style.color = confirmation.value && confirmation.value === password.value ? "#17835e" : "";
-      return checks;
-    }
-    password.addEventListener("input", updatePasswordMeter);
-    confirmation.addEventListener("input", updatePasswordMeter);
-    document.querySelectorAll("[data-toggle]").forEach(button => button.addEventListener("click", () => {
-      const input = $(button.dataset.toggle);
-      input.type = input.type === "password" ? "text" : "password";
-      button.textContent = input.type === "password" ? "Show" : "Hide";
-      button.setAttribute("aria-label", input.type === "password" ? "Show password" : "Hide password");
-    }));
+    password.addEventListener('input', updatePasswordUI);
+    confirm.addEventListener('input', updatePasswordUI);
+    updatePasswordUI();
 
-    form.addEventListener("submit", async event => {
-      event.preventDefault(); clearMessage();
-      const name = $("display-name").value.trim(), email = $("email").value.trim();
-      const checks = updatePasswordMeter();
-      if (!name) { showMessage("Please enter your name.", "error"); $("display-name").focus(); return; }
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showMessage("Please enter a valid email address.", "error"); $("email").focus(); return; }
-      if (!Object.values(checks).every(Boolean)) { showMessage("Your password must meet all four requirements shown below it.", "error"); password.focus(); return; }
-      if (password.value !== confirmation.value) { showMessage("Your passwords don't match. Please check them and try again.", "error"); confirmation.focus(); return; }
-      createButton.disabled = true; createButton.textContent = "Creating your account…";
+    onAuthStateChanged(auth, user => {
+      if (actionStarted || !user) return;
+      location.replace(user.emailVerified ? './dashboard.html' : './email-verification.html');
+    });
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (busy) return;
+      clearNotice(notice);
+      const name = $('fullName').value.trim();
+      const email = $('email').value.trim();
+      const pass = password.value;
+      if (name.length < 2) { showNotice(notice, 'error', 'Check your name', 'Enter at least two characters for your name.'); $('fullName').focus(); return; }
+      if (!email || !$('email').validity.valid) { showNotice(notice, 'error', 'Check your email', 'Enter a valid email address.'); $('email').focus(); return; }
+      if (!isPasswordValid(pass)) { showNotice(notice, 'error', 'Choose a stronger password', 'Meet every requirement in the password checklist before continuing.'); password.focus(); return; }
+      if (confirm.value !== pass) { showNotice(notice, 'error', 'Passwords do not match', 'Enter the same password in both fields.'); confirm.focus(); return; }
+      actionStarted = busy = true;
+      setButtonBusy(createBtn, true, 'Creating your account…');
       try {
-        const user = await registerWithEmail({ displayName: name, email, password: password.value, referralCode: captureReferralCode() });
-        $("verify-email").textContent = user.email || email;
-        $("verify-panel").classList.add("show");
-        showMessage("Your account was created. Verify your email to continue to onboarding.", "success");
-        form.hidden = true;
-        $("google-signup").hidden = true;
-        document.querySelector(".divider-text").hidden = true;
+        const user = await createEmailAccount({ name, email, password: pass });
+        let profileSaved = true;
+        try { await ensureUserProfile(user, { displayName: name }); }
+        catch (profileError) { profileSaved = false; console.warn('Firebase account created but profile write failed. Check Firestore rules.', profileError); }
+        let emailSent = true;
+        try { await sendVerification(user); }
+        catch (mailError) { emailSent = false; console.warn('Account created but verification email failed.', mailError); }
+        sessionStorage.setItem('studySpherePendingEmail', user.email || email);
+        const params = new URLSearchParams();
+        params.set(emailSent ? 'sent' : 'emailSendFailed', '1');
+        if (!profileSaved) params.set('profileSaveFailed', '1');
+        location.replace(`./email-verification.html?${params.toString()}`);
       } catch (error) {
-        console.error(error); showMessage(friendlyError(error), "error");
+        actionStarted = false;
+        showNotice(notice, 'error', 'We could not create your account', friendlyAuthError(error, 'signup'));
+        console.error('Study Sphere signup failed:', error);
       } finally {
-        createButton.disabled = false; createButton.innerHTML = 'Create my account <span aria-hidden="true">→</span>';
+        busy = false;
+        setButtonBusy(createBtn, false);
       }
     });
 
-    $("google-signup").addEventListener("click", async () => {
-      clearMessage(); const button = $("google-signup"); button.disabled = true; button.textContent = "Connecting to Google…";
-      try { await signInWithGoogle(); }
-      catch (error) { console.error(error); showMessage(friendlyError(error), "error"); button.disabled = false; button.innerHTML = '<span class="google-g" aria-hidden="true">G</span> Sign up with Google'; }
-    });
-
-    $("resend-verification").addEventListener("click", async () => {
-      const button = $("resend-verification"); button.disabled = true; button.textContent = "Sending…";
-      try { await resendVerificationEmail(); showMessage("A new verification email has been requested. Check your inbox and Spam/Junk folder.", "success"); }
-      catch (error) { console.error(error); showMessage(friendlyError(error), "error"); }
-      finally { button.disabled = false; button.textContent = "Resend verification email"; }
-    });
-
-    try { await processGoogleRedirectResult(); } catch (error) { console.warn(error); }
-    watchAuthState(async user => {
-      if (!user) return;
-      const hasPasswordProvider = (user.providerData || []).some(p => p.providerId === "password");
-      if (hasPasswordProvider && !user.emailVerified) {
-        $("verify-email").textContent = user.email || "your email address";
-        $("verify-panel").classList.add("show"); form.hidden = true; $("google-signup").hidden = true; document.querySelector(".divider-text").hidden = true;
-        return;
+    googleBtn.addEventListener('click', async () => {
+      if (busy) return;
+      clearNotice(notice);
+      actionStarted = busy = true;
+      setButtonBusy(googleBtn, true, 'Connecting to Google…');
+      try {
+        const credential = await googleSignIn();
+        if (!credential) return;
+        const user = credential.user;
+        try { await ensureUserProfile(user, { displayName: name }); }
+        catch (profileError) { console.warn('Google auth succeeded but profile save failed.', profileError); }
+        location.replace(user.emailVerified ? './dashboard.html' : './email-verification.html');
+      } catch (error) {
+        actionStarted = false;
+        showNotice(notice, 'error', 'Google sign-in did not finish', friendlyAuthError(error, 'signup'));
+        console.error('Study Sphere Google signup failed:', error);
+      } finally {
+        busy = false;
+        setButtonBusy(googleBtn, false);
       }
-      try { await refreshCurrentUser(); } catch { /* use current session if reload is unavailable */ }
-      try { await ensureUserProfile(auth.currentUser || user); } catch (error) { console.warn("Cloud profile sync:", error); }
-      window.location.replace("onboarding.html");
     });
-    if (new URLSearchParams(location.search).get("verify") === "1") {
-      showMessage("Your account is waiting for email verification. Open the link sent to your inbox, then return here.", "info");
-    }
-    if (new URLSearchParams(location.search).get("verified") === "1") {
-      showMessage("Email verification complete. Signing you into your learning space…", "success");
-    }
-    if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) navigator.serviceWorker.register("./service-worker.js").catch(() => {});
   </script>
 </body>
 </html>

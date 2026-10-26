@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#050816"><meta name="description" content="Secure Study Sphere Ai account verification and password reset."><title>Secure account action — Study Sphere Ai</title><link rel="icon" href="./assets/logo.png" type="image/png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="./styles.css"></head>
+<body><div class="bg-grid"></div><div class="ambient a"></div><div class="ambient b"></div>
+<header class="topbar wrap"><a class="brand" href="./index.html" aria-label="Study Sphere Ai home"><img class="brand-mark" src="./assets/logo.png" alt=""><span><span class="brand-word">Study Sphere <span class="ai">Ai</span></span><span class="brand-note">A Code Academy Solution product</span></span></a><span class="pill"><span class="pill-dot"></span> Secure account link</span></header>
+<main class="wrap" style="min-height:calc(100vh - 130px);display:grid;place-items:center;padding-top:32px;padding-bottom:44px"><section class="auth-card" style="justify-self:center;max-width:520px" aria-labelledby="actionTitle"><div class="card-brand"><a class="brand" href="./index.html"><img class="brand-mark" src="./assets/logo.png" alt=""><span class="brand-word">Study Sphere <span class="ai">Ai</span></span></a></div><div class="card-kicker">SECURE ACCOUNT ACTION</div><h1 class="card-title" id="actionTitle">Checking your link…</h1><p class="card-subtitle" id="actionSubtitle">We're checking that this one-time link is valid.</p><div id="notice" class="inline-notice show info" aria-live="polite">Please keep this page open while we check the link.</div>
+<form class="form" id="resetForm" hidden novalidate>
+  <div class="field"><label for="resetEmail">Account email</label><div class="input-wrap"><span class="input-icon" aria-hidden="true">✉</span><input id="resetEmail" type="email" readonly></div></div>
+  <div class="field"><label for="newPassword">New password</label><div class="input-wrap"><span class="input-icon" aria-hidden="true">⌑</span><input id="newPassword" type="password" autocomplete="new-password" placeholder="Create your new password" minlength="6" maxlength="400" required><button class="password-toggle" type="button" data-toggle-password="newPassword" aria-label="Show password" aria-pressed="false">Show</button></div><div class="password-rules" id="passwordRules" aria-live="polite"></div><div class="strength"><span id="strengthFill"></span></div></div>
+  <div class="field"><label for="confirmPassword">Confirm new password</label><div class="input-wrap"><span class="input-icon" aria-hidden="true">⌑</span><input id="confirmPassword" type="password" autocomplete="new-password" placeholder="Enter it again" minlength="6" maxlength="400" required><button class="password-toggle" type="button" data-toggle-password="confirmPassword" aria-label="Show password" aria-pressed="false">Show</button></div><p id="matchHelp" class="field-help" aria-live="polite">Enter the same password twice.</p></div>
+  <button class="btn btn-primary" id="resetBtn" type="submit">Update password <span aria-hidden="true">→</span></button>
+</form>
+<div class="action-row" id="actionLinks" hidden><a class="btn btn-primary" id="primaryLink" href="./login.html">Continue to sign in <span aria-hidden="true">→</span></a></div>
+<div class="auth-foot" id="backFoot">Only use links that you requested. <a href="./forgot.html"><strong>Request a new reset link</strong></a></div>
+</section></main><footer class="footer wrap">© <span id="year"></span> Study Sphere Ai · A Code Academy Solution product</footer>
+<script type="module">
+  import { auth, applyActionCode, checkActionCode, verifyPasswordResetCode, confirmPasswordReset, PASSWORD_RULES, passwordRules, isPasswordValid, friendlyAuthError } from './auth-service.js';
+  import { $, showNotice, clearNotice, setButtonBusy, wirePasswordToggles, renderPasswordRules, strengthPercent } from './auth-ui.js';
+  const params=new URLSearchParams(location.search),mode=params.get('mode'),oobCode=params.get('oobCode');
+  const notice=$('notice'),form=$('resetForm'),links=$('actionLinks');let accountEmail='',working=false;
+  $('year').textContent=new Date().getFullYear();wirePasswordToggles();
+  function showResult(type,title,body,buttonLabel='Continue to sign in',href='./login.html'){
+    $('actionTitle').textContent=title;$('actionSubtitle').textContent=body;showNotice(notice,type,title,body);form.hidden=true;links.hidden=false;$('primaryLink').innerHTML=`${buttonLabel} <span aria-hidden="true">→</span>`;$('primaryLink').href=href;
+    $('backFoot').textContent='For your security, each email action link can only be used as allowed by Firebase.';
+  }
+  function updatePasswordUI(){const rules=passwordRules($('newPassword').value);renderPasswordRules($('passwordRules'),rules);$('strengthFill').style.width=`${strengthPercent(rules)}%`;const mismatch=$('confirmPassword').value.length>0&&$('confirmPassword').value!==$('newPassword').value;$('matchHelp').textContent=mismatch?'These passwords do not match yet.':'Enter the same password twice.';$('matchHelp').style.color=mismatch?'var(--danger)':'var(--faint)';$('confirmPassword').setAttribute('aria-invalid',mismatch?'true':'false');}
+  $('newPassword').addEventListener('input',updatePasswordUI);$('confirmPassword').addEventListener('input',updatePasswordUI);updatePasswordUI();
+
+  async function start(){
+    if(!mode||!oobCode){showResult('error','This link is incomplete','Open the full link from the email you received.');return;}
+    try{
+      if(mode==='verifyEmail'||mode==='verifyAndChangeEmail'){
+        await checkActionCode(auth,oobCode);
+        await applyActionCode(auth,oobCode);
+        showResult('success','Email verified successfully','Firebase has confirmed the email address. Return to Study Sphere Ai and check your account status.','Finish verification','./email-verification.html?verified=1');
+        return;
+      }
+      if(mode==='resetPassword'){
+        accountEmail=await verifyPasswordResetCode(auth,oobCode);
+        $('actionTitle').textContent='Create a new password';$('actionSubtitle').textContent='Choose a strong password for your Study Sphere Ai account.';$('resetEmail').value=accountEmail;
+        notice.className='inline-notice';notice.replaceChildren();form.hidden=false;links.hidden=true;$('backFoot').innerHTML='Changed your mind? <a href="./login.html"><strong>Return to sign in</strong></a>';return;
+      }
+      showResult('error','Unsupported email action','This link type is not supported by this page. Request a new link from Study Sphere Ai.');
+    }catch(error){
+      console.warn('Study Sphere email action did not validate:',error?.code||'unknown error');
+      const message=friendlyAuthError(error,mode==='resetPassword'?'reset':'verify');
+      showResult('error','This link is invalid or expired',`${message} Request a new link and try again.`,mode==='resetPassword'?'Request new reset link':'Return to sign in',mode==='resetPassword'?'./forgot.html':'./login.html');
+    }
+  }
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();if(working)return;clearNotice(notice);const pass=$('newPassword').value,confirm=$('confirmPassword').value;
+    if(!isPasswordValid(pass)){showNotice(notice,'error','Choose a stronger password','Meet every requirement in the password checklist.');$('newPassword').focus();return;}
+    if(pass!==confirm){showNotice(notice,'error','Passwords do not match','Enter the same password in both fields.');$('confirmPassword').focus();return;}
+    working=true;setButtonBusy($('resetBtn'),true,'Updating password…');
+    try{await confirmPasswordReset(auth,oobCode,pass);showResult('success','Password updated','Your password has been changed. You can now sign in with your new password.','Sign in now','./login.html?reset=complete');}
+    catch(error){showNotice(notice,'error','Password could not be updated',friendlyAuthError(error,'reset'));console.warn('Study Sphere password reset completion failed:',error?.code||'unknown error');}
+    finally{working=false;setButtonBusy($('resetBtn'),false);}
+  });
+  start();
+</script></body></html>

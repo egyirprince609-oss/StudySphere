@@ -1,73 +1,50 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#2348c6">
-  <meta name="application-name" content="Study Sphere Ai">
-  <meta name="description" content="Study Sphere Ai helps learners explore, learn and create with guided study tools, coding practice and AI-powered support.">
-  <meta name="keywords" content="Study Sphere Ai, learning app, coding education, AI study assistant, school, kindergarten, primary, JHS, SHS">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Study Sphere Ai">
-  <meta property="og:title" content="Study Sphere Ai — Curiosity today. Confidence for tomorrow.">
-  <meta property="og:description" content="A friendly space to learn, practise, build projects and grow your confidence. Explore. Learn. Create.">
-  <meta property="og:image" content="logo.png">
-  <meta property="og:image:alt" content="Study Sphere Ai 3D learning logo">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Study Sphere Ai — Curiosity today. Confidence for tomorrow.">
-  <meta name="twitter:description" content="Explore. Learn. Create. Your learning journey starts here.">
-  <meta name="twitter:image" content="logo.png">
-  <link rel="icon" href="logo.png" type="image/png">
-  <link rel="apple-touch-icon" href="logo.png">
-  <link rel="manifest" href="manifest.json">
-  <title>Study Sphere Ai — Curiosity today. Confidence for tomorrow.</title>
-  <link rel="stylesheet" href="styles.css">
-  <script type="module">
-    import { auth, watchAuthState, refreshCurrentUser, ensureUserProfile, processGoogleRedirectResult } from "./authentication.js";
-    const status = document.getElementById("splash-status");
-    const go = path => { window.location.replace(path); };
-
-    // Register the lightweight app-shell service worker for HTTPS/localhost installs.
-    if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
-      window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(err => console.warn("Service worker registration skipped:", err)));
-    }
-
-    try { await processGoogleRedirectResult(); } catch (error) { console.warn("Google redirect recovery:", error); }
-    let routed = false;
-    const fallback = window.setTimeout(() => {
-      if (!routed) go("login.html");
-    }, 7000);
-
-    watchAuthState(async user => {
-      if (routed) return;
-      routed = true;
-      clearTimeout(fallback);
-      if (!user) { go("login.html"); return; }
-      try { await refreshCurrentUser(); } catch (error) { console.warn("Could not refresh user state:", error); }
-      const current = auth.currentUser || user;
-      const isGoogleOrFederated = (current.providerData || []).some(provider => provider.providerId !== "password");
-      if (current.email && !current.emailVerified && !isGoogleOrFederated) {
-        go("signup.html?verify=1");
-        return;
-      }
-      try { await ensureUserProfile(current); }
-      catch (error) { console.warn("Cloud profile sync will need attention:", error); }
-      go("onboarding.html");
-    }, error => {
-      console.error(error);
-      status.textContent = "We could not check your session. Opening sign in…";
-      window.setTimeout(() => go("login.html"), 1200);
-    });
-  </script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#050816">
+  <meta name="description" content="Study Sphere Ai — a personal AI-powered learning space by Code Academy Solution."><meta name="robots" content="index,follow">
+  <title>Study Sphere Ai — Learn • Practice • Grow</title><link rel="icon" href="./assets/logo.png" type="image/png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <main class="splash-screen" aria-labelledby="splash-title">
-    <img class="splash-logo" src="logo.png" alt="Study Sphere Ai logo" width="512" height="512" fetchpriority="high">
-    <h1 class="splash-title" id="splash-title">Study <span>Sphere</span> Ai</h1>
-    <p class="motto">Curiosity today. Confidence for tomorrow.</p>
-    <div class="loader" aria-hidden="true"><span></span></div>
-    <p class="splash-status" id="splash-status" aria-live="polite">Getting your learning space ready…</p>
-    <p class="footer-center">Explore. Learn. Create.</p>
+  <div class="bg-grid"></div><div class="ambient a"></div><div class="ambient b"></div>
+  <main class="splash" aria-label="Study Sphere Ai starting">
+    <div class="orb" aria-hidden="true"></div>
+    <div class="splash-content">
+      <img class="splash-logo" src="./assets/logo.png" alt="Study Sphere Ai 3D neon brain-and-book emblem">
+      <h1 class="splash-title">Study Sphere <span class="gradient-text">Ai</span></h1>
+      <p class="splash-tagline">LEARN <span>•</span> PRACTICE <span>•</span> GROW</p>
+      <div class="loader" role="progressbar" aria-label="Preparing your study space"><span></span></div>
+      <p class="splash-status" id="splashStatus" aria-live="polite">Preparing your study space…</p>
+    </div>
+    <div class="splash-company">A Code Academy Solution product</div>
+    <noscript><div style="position:absolute;bottom:60px;text-align:center"><a href="./signup.html">Continue to Study Sphere Ai</a></div></noscript>
   </main>
+  <script>
+    // Keep a fallback even if the Firebase module CDN is temporarily unavailable.
+    window.__studySphereSplashStarted = Date.now();
+    window.__studySphereSplashRedirected = false;
+    window.__studySphereSplashFallback = setTimeout(() => {
+      if (!window.__studySphereSplashRedirected) {
+        window.__studySphereSplashRedirected = true;
+        location.replace('./signup.html');
+      }
+    }, 6500);
+  </script>
+  <script type="module">
+    import { auth } from './firebase.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js';
+    const status=document.getElementById('splashStatus');
+    const minSplash=1650;
+    function route(user){
+      if(window.__studySphereSplashRedirected)return;
+      window.__studySphereSplashRedirected=true;
+      clearTimeout(window.__studySphereSplashFallback);
+      const target=!user?'./signup.html':(user.emailVerified?'./dashboard.html':'./email-verification.html');
+      status.textContent=user?(user.emailVerified?'Opening your study space…':'Checking your email verification…'):'Opening your learning journey…';
+      const elapsed=Date.now()-(window.__studySphereSplashStarted||Date.now());
+      setTimeout(()=>location.replace(target),Math.max(0,minSplash-elapsed));
+    }
+    onAuthStateChanged(auth, route);
+  </script>
 </body>
 </html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#050816"><meta name="description" content="Verify your email to finish setting up your Study Sphere Ai account."><title>Verify email — Study Sphere Ai</title><link rel="icon" href="./assets/logo.png" type="image/png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="./styles.css"></head>
+<body><div class="bg-grid"></div><div class="ambient a"></div><div class="ambient b"></div>
+<header class="topbar wrap"><a class="brand" href="./index.html" aria-label="Study Sphere Ai home"><img class="brand-mark" src="./assets/logo.png" alt=""><span><span class="brand-word">Study Sphere <span class="ai">Ai</span></span><span class="brand-note">A Code Academy Solution product</span></span></a><div class="topbar-side"><a href="./login.html">Sign in <span aria-hidden="true">↗</span></a></div></header>
+<main class="wrap auth-layout"><section class="intro"><span class="eyebrow"><span class="spark">✦</span> ONE LAST STEP</span><h1>Make this learning space <span class="gradient-text">yours.</span></h1><p class="intro-copy">We've sent a verification link to confirm that you can access your email. Open the message and follow its link, then come back here to finish signing in.</p><div class="feature-stack"><div class="feature"><span class="feature-icon" aria-hidden="true">✉</span><div><strong>Open the email from Firebase</strong><small>Check your inbox and spam or junk folder.</small></div></div><div class="feature"><span class="feature-icon" aria-hidden="true">↗</span><div><strong>Tap the verification link</strong><small>It will open a secure Study Sphere Ai verification page.</small></div></div><div class="feature"><span class="feature-icon" aria-hidden="true">✓</span><div><strong>Come back and check</strong><small>We'll confirm your email status before entering the app.</small></div></div></div></section>
+<section class="auth-card" aria-labelledby="form-title"><div class="card-brand"><a class="brand" href="./index.html"><img class="brand-mark" src="./assets/logo.png" alt=""><span class="brand-word">Study Sphere <span class="ai">Ai</span></span></a></div><div class="card-kicker">EMAIL VERIFICATION</div><h2 class="card-title" id="form-title">Check your inbox</h2><p class="card-subtitle" id="introText">Verify your email address so we can protect your account.</p><div id="notice" class="inline-notice" aria-live="polite"></div>
+<div class="status-panel"><span class="status-icon" aria-hidden="true">✉</span><div><strong id="emailTitle">Verification email requested</strong><p id="emailText">The message can take a short moment to arrive. Keep this page open while you check your email.</p></div></div>
+<div class="form"><button class="btn btn-primary" id="checkBtn" type="button">I've verified my email <span aria-hidden="true">→</span></button><button class="btn btn-secondary" id="resendBtn" type="button">Resend verification email</button><button class="btn btn-text" id="changeAccountBtn" type="button">Use a different account</button></div>
+<div class="auth-foot">Already verified? <a href="./login.html"><strong>Return to sign in</strong></a></div><p class="legal-copy">For your safety, Study Sphere Ai checks the verification status directly with Firebase. A click alone is not treated as proof of verification.</p></section></main><footer class="footer wrap">© <span id="year"></span> Study Sphere Ai · A Code Academy Solution product</footer>
+<script type="module">
+  import { auth, sendVerification, refreshAndCheckEmail, ensureUserProfile, signOut, friendlyAuthError } from './auth-service.js';
+  import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js';
+  import { $, showNotice, clearNotice, setButtonBusy } from './auth-ui.js';
+  const notice=$('notice'),checkBtn=$('checkBtn'),resendBtn=$('resendBtn'),changeBtn=$('changeAccountBtn');
+  const params=new URLSearchParams(location.search);let currentUser=null,working=false,checkOnly=false;$('year').textContent=new Date().getFullYear();
+  const storedEmail=sessionStorage.getItem('studySpherePendingEmail')||'';
+  const emailHint=params.get('email')||storedEmail;
+  if(emailHint){$('emailTitle').textContent='Verification sent to';$('emailText').textContent=emailHint;}
+  if(params.get('verified')==='1') showNotice(notice,'success','Verification link opened','The link was processed. Check your current Firebase session below to finish signing in.');
+  else if(params.has('emailSendFailed')) showNotice(notice,'error','Your account was created, but the email was not sent','You can retry the verification email below. Do not register the same email again.');
+  else if(params.has('profileSaveFailed')) showNotice(notice,'error','Verification sent; profile setup needs attention','Your Firebase Authentication account exists and the verification email was sent, but the initial Firestore profile could not be saved. The app will retry after verification; check Firestore Rules if this continues.');
+  else if(params.has('sent')) showNotice(notice,'success','Verification email sent','Open the message from Firebase and follow its verification link.');
+  else if(params.has('required')) showNotice(notice,'info','Verify before continuing','This account is signed in, but Firebase still reports that its email is not verified.');
+  onAuthStateChanged(auth,user=>{
+    currentUser=user;
+    if(user?.email){$('emailTitle').textContent='Verification email for';$('emailText').textContent=user.email;}
+    const canUseAccount=Boolean(user);
+    checkBtn.disabled=!canUseAccount;resendBtn.disabled=!canUseAccount;
+    changeBtn.textContent=canUseAccount?'Use a different account':'Go to sign in';
+    if(user?.emailVerified&&!params.has('verified'))location.replace('./dashboard.html');
+    if(!user&&!params.has('verified')&&!params.has('emailSendFailed')&&!params.has('sent')&&!params.has('profileSaveFailed')){
+      showNotice(notice,'info','Sign in to resend or check','If you already clicked the verification link, sign in with the same account to continue.');
+    }
+  });
+  checkBtn.addEventListener('click',async()=>{
+    if(working)return;
+    if(!currentUser){showNotice(notice,'info','Sign in to continue','Sign in with the account whose email you verified.');return;}
+    working=true;setButtonBusy(checkBtn,true,'Checking with Firebase…');clearNotice(notice);
+    try{
+      const verified=await refreshAndCheckEmail(currentUser);
+      if(verified){try{await ensureUserProfile(auth.currentUser||currentUser);}catch(profileError){console.warn('Email verified; profile refresh failed.',profileError);}
+        showNotice(notice,'success','Email verified','Your account is ready. Opening your study space…');setTimeout(()=>location.replace('./dashboard.html'),700);
+      }else{showNotice(notice,'info','We have not received confirmation yet','Open the newest verification email, tap its link, then return here and check again.');}
+    }catch(error){showNotice(notice,'error','We could not check verification',friendlyAuthError(error,'verify'));console.error('Verification status check failed:',error);}
+    finally{working=false;setButtonBusy(checkBtn,false);}
+  });
+  resendBtn.addEventListener('click',async()=>{
+    if(working)return;if(!currentUser){showNotice(notice,'info','Sign in first','Sign in with your email and password to request another verification message.');return;}
+    working=true;setButtonBusy(resendBtn,true,'Sending a new link…');clearNotice(notice);
+    try{await sendVerification(currentUser);showNotice(notice,'success','A new link has been sent','Check your inbox for the newest message. Older verification links may no longer be useful.');}
+    catch(error){showNotice(notice,'error','Could not resend the email',friendlyAuthError(error,'verify'));console.error('Resend verification failed:',error);}
+    finally{working=false;setButtonBusy(resendBtn,false);}
+  });
+  changeBtn.addEventListener('click',async()=>{try{if(auth.currentUser)await signOut(auth);}catch(error){console.warn('Sign out before changing account failed.',error);}location.replace('./login.html');});
+</script></body></html>

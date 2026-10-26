@@ -1,84 +1,80 @@
-# Study Sphere Ai — Authentication starter
+# Study Sphere Ai — Splash + Authentication Starter
 
-**Motto:** Curiosity today. Confidence for tomorrow.  
-**Creative line:** Explore. Learn. Create.
+A standalone starter for **Study Sphere Ai**, a Code Academy Solution product. The current build includes the animated splash page, email/password signup, Google sign-in, login, email verification, forgotten-password email, a branded email action handler, and a protected post-login placeholder dashboard. It does not yet include the AI chat engine, premium billing, or the full LMS.
 
-This is a fresh, mobile-first Firebase Authentication starter using the provided Firebase web configuration and the provided brand image saved as `logo.png`.
+## Files
 
-## Included files
+- `index.html` — animated splash screen; routes an existing verified user to the dashboard, an unverified user to email verification, and a signed-out visitor to signup.
+- `signup.html` — email/password account creation, live password checklist, Google sign-in, verification-email request, and starter Firestore profile creation.
+- `login.html` — email/password and Google sign-in, remember-me/session persistence, and the unverified-email guard.
+- `email-verification.html` — resend and check-verification controls; checks Firebase's current user status instead of trusting a button click.
+- `forgot.html` — sends Firebase's password-reset email without revealing whether an address has an account.
+- `email-action.html` — custom handler for verification and password-reset action codes. Firebase must be configured to use this URL if you want this branded handler rather than Firebase's default handler.
+- `dashboard.html` — protected placeholder so successful login has a working destination while the tutor/LMS are built.
+- `firebase.js` and `auth-service.js` — central Firebase initialization and shared authentication/profile helpers.
+- `styles.css` — responsive dark navy, cyan, blue, and violet Code Academy-style visual system.
+- `assets/logo.png` — cropped 3D Study Sphere Ai emblem. `assets/brand-showcase.png` preserves the full generated artwork as a reference.
+- `firestore.rules` — narrowly scoped starter rules for the user's own profile; no client write can grant premium entitlement.
 
-- `index.html` — logo splash screen and signed-in routing. A verified account goes to `onboarding.html`; an unverified email/password account is sent to the verification panel; a signed-out visitor goes to `login.html`.
-- `authentication.js` — Firebase initialization, local-persistent sessions, email/password and Google methods, verification email, reset email, profile creation, referral links/attribution, and helpers for user-owned notes/projects/conversations.
-- `signup.html` — email/password sign-up, live 4-part password meter, confirmation, Google sign-up and verification message.
-- `login.html` — email/password login, Google login, verification reminder and resend control.
-- `forgot-password.html` — secure Firebase password-reset request.
-- `forgot password.html` — a filename-with-spaces copy for compatibility; use the hyphenated filename in links.
-- `styles.css` — responsive styling.
-- `logo.png` — the app logo used for the brand and PWA icons.
-- `manifest.json` and `service-worker.js` — minimal installable web app shell for now.
-- `firestore.rules` — starting rules for per-user profiles, notes, projects, conversations, and referral-code lookup.
+## Before testing or deploying
 
-## Required setup before running
+### 1. Enable Firebase Authentication providers
 
-1. Put these files together in the same site root. Keep your real `onboarding.html` beside them. Do not open pages with `file://`; use a local web server or HTTPS hosting.
-2. In Firebase Console → Authentication → Sign-in method, enable **Email/Password** and **Google**. Add the actual development/production domains under Authentication → Settings → Authorized domains.
-3. Set and verify the email/password password policy in the Firebase Console. This UI checks: **6–400 characters**, at least one uppercase letter, one lowercase letter and one non-alphanumeric, non-whitespace special character. Frontend validation is only the user experience layer; Firebase must enforce the policy too.
-4. Under Authentication → Templates, customize the **Email address verification** and **Password reset** templates with your product name and support details. The Firebase SDK requests the messages; browser JavaScript cannot itself send mail through Firebase. The verification URL returns to `login.html?verified=1`. Ensure that URL's domain is authorized.
+In the Firebase Console for project **`studyspher`**:
 
-   Suggested verification email copy (keep Firebase's generated action-link/button in the template):
+1. Open **Authentication → Sign-in method**.
+2. Enable **Email/Password**.
+3. Enable **Google** and choose the support email shown by Firebase.
+4. Open **Authentication → Settings → Authorized domains** and add the exact hosting domain you use (for local testing, add `localhost` if it is not already present).
+5. Under the Firebase Authentication password policy, configure the minimum length and uppercase, lowercase, and non-alphanumeric requirements to match the signup and reset pages. This UI accepts 6–400 characters.
 
-   > **Subject:** Verify your Study Sphere Ai email address
-   >
-   > Hello,
-   >
-   > Welcome to Study Sphere Ai! We are happy to have you join a learning space made for curiosity, creativity and growth. To help keep your account secure, please verify that this email address belongs to you by selecting the verification link in this message. Once your email is verified, return to Study Sphere Ai and continue to onboarding.
-   >
-   > If you did not create this account, you can ignore this message. For your safety, do not share your verification link with anyone.
-   >
-   > Thank you,\n   > The Study Sphere Ai Team
-5. Create a Cloud Firestore database and publish `firestore.rules` from the Firebase Console → Firestore Database → Rules. Review rules against any existing schema before replacing production rules. Never use open rules such as `allow read, write: if true`.
-6. For share-card metadata, replace the relative `og:image` and `twitter:image` values `logo.png` with the absolute HTTPS address of the deployed logo (for example, `https://YOUR-REAL-DOMAIN/logo.png`) in each HTML file. Social preview crawlers generally require an absolute, publicly reachable image URL. Do not leave `YOUR-REAL-DOMAIN` as written.
-7. Test in an incognito window and on a phone. HTTPS (or `localhost`) is required for service-worker registration. The service worker caches the app shell only; it does not make Firebase authentication or AI calls work offline.
+### 2. Configure branded email links
 
-## Important architecture/security notes
+Firebase can send verification and password-reset emails, but **the app cannot enable email templates or domain settings from source code**. In **Authentication → Templates**, edit both **Email address verification** and **Password reset** templates and set their custom action URL to:
 
-- Firebase local persistence keeps a signed-in session on the same browser/device until the user signs out, storage is cleared, or Firebase invalidates the session. This is not the same as keeping a verification link: verification and password-reset links are one-time action links managed by Firebase and should not be stored in user profile documents.
-- For email/password sign-up, the app sends a Firebase verification email. The user stays on the verification panel until the email is verified, then can continue to `onboarding.html`. Google-provider accounts generally arrive with provider-reported email verification; this is checked using Firebase's user state.
-- Google sign-in uses Firebase's official Google provider flow (popup on desktop, redirect on narrow/mobile layouts). This starter intentionally does **not** display a fake reCAPTCHA checkbox. Firebase's web `RecaptchaVerifier` is designed for specific flows such as phone verification; it is not a generic visible CAPTCHA gate for `GoogleAuthProvider`. For web app protection, configure Firebase App Check with reCAPTCHA Enterprise (score-based and generally invisible) if it fits the project, then monitor before enabling enforcement. A visible checkbox challenge requires a properly configured site key and server-side validation; this starter does not pretend to validate one.
-- The referral system makes a code, creates a share link, and records a referrer's UID when a new account signs up using a valid `?ref=CODE` link. **It does not automatically grant a reward.** Actual awards/counts must be verified by a trusted Cloud Function/backend to prevent self-referrals, forged requests, repeat rewards, and client-side manipulation. The reward amount and trigger have not been specified yet.
-- Premium is read-only from the UI side. Do not let a browser grant its own premium access. A payment provider/webhook or trusted backend must update the entitlement, and server-side protected features must verify it.
-- Notes/projects/conversations have helper functions in `authentication.js` for per-user Firestore sync plus local-device caching/pending retries. Your future pages must call `saveUserData("notes" | "projects" | "conversations", id, data)` and the matching list/listener functions. This does not automatically save data from other pages unless they use these functions.
-- The Firebase project configuration was supplied by the developer. The Firebase web API key is expected to be present in the client config; protect the application with Firebase Authentication, Firestore/Storage Rules, provider restrictions and App Check as appropriate. Never put OpenAI, Gemini, OpenRouter, DeepSeek or ElevenLabs **provider secret keys** in this frontend.
-- These are browser-first pages and a PWA shell, not a completed native APK. Google OAuth in a true Android wrapper may need the appropriate native sign-in integration and package/signing configuration.
+`https://YOUR_DEPLOYED_DOMAIN/email-action.html`
 
-## Handy cloud-data API
+Replace `YOUR_DEPLOYED_DOMAIN` with your real HTTPS hostname. The action handler is designed to receive the Firebase query parameters `mode` and `oobCode`. If the custom action URL is not configured, Firebase may use its default email-action page instead; the emails can still be delivered, but this app's custom reset form will not be the handler shown from the email link.
 
-```js
-import {
-  saveUserData,
-  listUserData,
-  listenToUserData,
-  deleteUserData,
-  getUserProfile,
-  getPremiumStatus,
-  makeReferralLink,
-  signOutUser
-} from "./authentication.js";
+The continue URLs created in the code point back to this app. The hosting domain must be authorized in Firebase Authentication.
 
-const saved = await saveUserData("notes", null, {
-  title: "My first note",
-  body: "What I learned today"
-});
-// saved.id is the ID to keep; saved.synced indicates whether cloud sync succeeded.
+### 3. Enable Firestore and deploy the starter rules
 
-const notes = await listUserData("notes");
-const unsubscribe = listenToUserData("projects", projects => console.log(projects));
-// Call unsubscribe() when the screen/page no longer needs the live listener.
+Create/enable Cloud Firestore in project `studyspher`, then deploy the included rules from this directory:
 
-const referral = await makeReferralLink();
-// referral.code and referral.link can be shown in a future referral screen.
+```bash
+npm install -g firebase-tools
+firebase login
+firebase use studyspher
+firebase deploy --only firestore:rules
 ```
 
-## Password rule reference
+The rules allow an authenticated learner to read their own profile and update basic profile fields. They do **not** grant access to future chats/courses collections or premium entitlements. Add specific rules when those data models are implemented. Later, subscription status must be granted by a trusted backend/payment webhook, not by a browser field.
 
-The live meter is a quality guide, not a substitute for the Firebase-enforced policy. Passwords are never written to Firestore or local storage by this starter.
+### 4. Host the files over HTTPS
+
+ES-module imports and Firebase Auth should be tested from a web server, not by opening `index.html` as a `file://` URL. For Firebase Hosting (if Hosting is enabled for this project):
+
+```bash
+firebase deploy --only hosting
+```
+
+Alternatively, upload the static app to your chosen HTTPS host. Add that exact domain to Firebase Authentication's authorized domains and update the custom email action URLs to match.
+
+### 5. Run a real end-to-end test
+
+1. Open the deployed `/index.html`.
+2. Create an account using an email address you can access.
+3. Confirm the verification message arrives, then open the link.
+4. Return to the app, choose **I've verified my email**, and confirm that it opens the dashboard.
+5. Sign out, sign in again, and confirm the verified account passes the gate.
+6. Use **Forgot password**, open the newest email, and submit a new password on the custom action page.
+7. Test Google sign-in with an actual Google account.
+
+Static source checks cannot prove that Firebase providers, domains, Firestore, email templates, and email delivery are enabled correctly in your project. Those settings must be confirmed during the live test.
+
+## Security notes
+
+- The Firebase web config in `firebase.js` is client configuration. Firebase web API keys are normally public; security must come from Authentication, Firestore/Storage Rules, App Check where appropriate, and trusted backend validation.
+- Never put OpenAI, Gemini, OpenRouter, or DeepSeek API secrets in frontend code. Keep those provider keys in Render's backend environment variables.
+- The dashboard is only a protected placeholder. Before adding AI requests, the Render backend must verify Firebase ID tokens and enforce user-level plan limits server-side.
